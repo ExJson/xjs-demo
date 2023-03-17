@@ -34,10 +34,10 @@ public final class AppRunner {
             System.err.println("Error creating file directory: " + dir);
             return;
         }
-        copyFile("resources/files/experimental.xjs", new File(dir, "experimental.xjs"));
-        copyFile("resources/files/types.xjs", new File(dir, "types.xjs"));
-        copyFile("resources/files/utils.xjs", new File(dir, "utils.xjs"));
-        copyFile("resources/files/evaluation.xjs", new File("evaluation.xjs"));
+        copyFile("/files/experimental.xjs", new File(dir, "experimental.xjs"));
+        copyFile("/files/types.xjs", new File(dir, "types.xjs"));
+        copyFile("/files/utils.xjs", new File(dir, "utils.xjs"));
+        copyFile("/files/evaluation.xjs", new File("evaluation.xjs"));
     }
 
     private static void copyFile(final String from, final File to) {
@@ -45,20 +45,22 @@ public final class AppRunner {
             System.out.println("File will be loaded from the disk: " + to);
             return;
         }
-        final InputStream toCopy = AppRunner.class.getResourceAsStream(from);
-        if (toCopy == null) {
-            System.err.println("Resource not found. Nothing to copy: " + from);
-            return;
-        }
-        if (!to.getParentFile().mkdirs()) {
-            System.err.println("Error creating directory for file: " + to);
-            return;
-        }
-        try (final var fos = new FileOutputStream(to)) {
-            final byte[] b = new byte[1024];
-            int length;
-            while ((length = toCopy.read(b)) > 0) {
-                fos.write(b, 0, length);
+        try (final InputStream toCopy = AppRunner.class.getResourceAsStream(from)) {
+            if (toCopy == null) {
+                System.err.println("Resource not found. Nothing to copy: " + from);
+                return;
+            }
+            final File parent = to.getAbsoluteFile().getParentFile();
+            if (!(parent.exists() || parent.mkdirs())) {
+                System.err.println("Error creating directory for file: " + to);
+                return;
+            }
+            try (final var fos = new FileOutputStream(to)) {
+                final byte[] b = new byte[1024];
+                int length;
+                while ((length = toCopy.read(b)) > 0) {
+                    fos.write(b, 0, length);
+                }
             }
         } catch (final IOException e) {
             e.printStackTrace();

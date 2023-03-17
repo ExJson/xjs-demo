@@ -24,8 +24,8 @@ public final class Config {
     private final File file;
     private final List<ConfigListener> listeners;
     private int tabSize = 2;
-    private int windowWidth = 1000;
-    private int windowHeight = 600;
+    private int windowWidth = 1230;
+    private int windowHeight = 930;
     private int consoleRefreshDelay = (int) (1000.0 / 30.0);
     private boolean enableExperimental = false;
     private boolean useDarkTheme = true;

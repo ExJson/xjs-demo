@@ -35,7 +35,7 @@ public final class AppRunner {
             return;
         }
         copyFile("resources/files/experimental.xjs", new File(dir, "experimental.xjs"));
-        copyFile("resources/files/main.xjs", new File(dir, "main.xjs"));
+        copyFile("resources/files/types.xjs", new File(dir, "types.xjs"));
         copyFile("resources/files/utils.xjs", new File(dir, "utils.xjs"));
         copyFile("resources/files/evaluation.xjs", new File("evaluation.xjs"));
     }

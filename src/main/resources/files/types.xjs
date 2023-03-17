@@ -1,0 +1,45 @@
+
+// In a real example (e.g. Pangaea), these
+// values could be provided by the application.
+// e.g. $Pangaea.getWorldHeight()
+WORLD_HEIGHT >> var: 128
+WORLD_BOTTOM >> var: -64
+
+// Using pascal case to denote that this template
+// should be used as though it were a type.
+OffsetHeight >> (height) if: {
+  $height.array().size() == 2: [
+    $WORLD_BOTTOM + $height[0]
+    $WORLD_HEIGHT - $height[1]
+  ]
+  $height.array()[0].isNumber(): [
+    $WORLD_BOTTOM
+    $WORLD_HEIGHT - $height.array()[0]
+  ]
+  !$height: [
+    $WORLD_BOTTOM
+    $WORLD_HEIGHT
+  ]
+  _ >> raise: invalid height: $height
+}
+
+// Using snake case because this is a regular
+// template, not a type or a proper function.
+defaulted_noise >> private (type, cfg): {
+  type: $type
+  
+  // In the future, these would use a verbose
+  // reference. For example:
+  //   ${ cfg.frequency : 0.005 }
+  frequency: $( $cfg.frequency ).orElse(0.005)
+  threshold: $( $cfg.threshold ).orElse(0.02)
+}
+
+SimplexNoise >> (cfg): $defaulted_noise(simplex, $cfg)
+PerlinNoise >> (cfg): $defaulted_noise(perlin, $cfg)
+CellularNoise >> (cfg): $defaulted_noise(cellular, $cfg)
+
+AnyOf >> (generators): {
+  type: any_of
+  references: $generators.array()
+}

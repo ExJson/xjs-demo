@@ -1,0 +1,5 @@
+PI >> var: 3.14159265359
+
+circumference >> (radius): 2 * $radius * $PI
+
+full_name >> (person): $person.first $person.last

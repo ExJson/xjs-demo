@@ -1,0 +1,204 @@
+cfg >> import var: ../config.xjs
+
+>> if (!$cfg.enableExperimental) raise: {
+  msg: This file requires experimental features!
+  details:
+    '''
+    To enable experimental features, open the application
+    config file (config.xjs) and set 'experimentalFeatures' 
+    to true, then restart the application.
+    '''
+}
+
+/**
+ * Feature: 
+ *
+ *   Range Functions
+ *
+ * Description:
+ *
+ *   Generates an array of numbers in the given range
+ *
+ * Use:
+ *
+ *   $range(maxExclusive)
+ *   $range(minInclusive, maxExclusive)
+ *
+ * Experimental because:
+ *
+ *   * We may introduce a dedicated syntax or, 
+ *     alternatively, treat this value as an iterable 
+ *     only, not a true array.
+ *
+ *   * We may introduce a true loop syntax in addition
+ *     to the array generator, where this will often
+ *     be used.
+ */
+
+section: "Demo of range functions"
+
+singleArg: $range(3)
+
+doubleArg: $range(4, 7)
+
+generated >> [ $range(3).. ]: $v * 2
+
+// loop
+max: 0
+
+>> [ $range(10).. ]: {
+  $max >> set: $max($max, $v)
+}
+
+/**
+ * Feature: 
+ *
+ *   Callable References
+ *
+ * Description:
+ *
+ *   When a regular value of the same name is not in scope,
+ *   a key reference may refer to a Callable--either a
+ *   built-in function or a template expression.
+ *
+ * Use:
+ *
+ *   $template_or_function_here
+ *
+ * Experimental because:
+ *
+ *   * We still need an inline template expression. We are
+ *     planning to add an "anonymous modifier" expression,
+ *     but this is still in design.
+ *
+ *     Current ideas:
+ *
+ *       $( import -> ../config.xjs ).enableExperimental
+ *       $( (a) -> $a * 2 )(2) // = 4
+ *
+ *   * The general behavior of when values are copied from
+ *     JSON path expressions still needs work.
+ */
+
+section: "Demo of passable functions"
+
+template >> (): "Hello, world!"
+
+renamed: $template
+
+value from renamed: $renamed()
+
+/**
+ * Feature: 
+ *
+ *   The find function
+ *
+ * Description:
+ *
+ *   Locates a value in an array when given members to
+ *   or a callable filter expression.
+ *
+ * Use:
+ *
+ *   $values.find({ key to find: value to match })
+ *   $values.find($referenceToFilter)
+ *
+ * Experimental because:
+ *
+ *   * Passable functions and inline templates are still
+ *     in design.
+ */
+
+section: "The find function"
+
+generators: [
+  { id: Cave Generator, size: 8 }
+  { id: Test Generator, size: 4 }
+  { id: Demo Generator, size: 2 }
+]
+
+cave generator: $generators.find({ id: Cave Generator })
+
+size_is_four >> (gen): $gen.size == 4
+
+test generator: $generators.find($size_is_four)
+
+/**
+ * Feature: 
+ *
+ *   Scope Expressions (NOT IMPLEMENTED)
+ *
+ * Description:
+ *
+ *   When any number of fields in an object are flagged
+ *   with the keyword "yield," those fields are returned
+ *   from the object as an array of each value or as the
+ *   single value being returned.
+ *
+ * Use:
+ *
+ *   three: {
+ *     a: 1
+ *     b: 2
+ *     >> yield: $a + $b
+ *   }
+ *
+ * Experimental because:
+ *
+ *   * Not sure if this type of expression will be readable
+ *     under practical circumstances.
+ *
+ *   * Not sure which keyword is the most clear.
+ *
+ *   * Not sure where to "capture" the yielded values. In
+ *     other words, not sure whether or how to yield from
+ *     nested scopes. For example, do we only yield the
+ *     value if there's no alias? Do we always yield values
+ *     when calling from a template? If so, implementation
+ *     would require significant structural changes to the
+ *     interpreter.
+ */
+
+section: "Demo of scope expressions"
+
+/**
+ * Feature:
+ *
+ *   Catch Expressions (NOT IMPLEMENTED)
+ *
+ * Description:
+ *
+ *   When a value on the RHS may throw a non-syntax-related
+ *   JEL exception (for example, file not found or path not
+ *   resolved), a "catch" modifier can be appended to the LHS.
+ *   If an error is throw, the output of this value will be a
+ *   JelError, which can be inspected and handled.
+ *
+ * Use:
+ *
+ *   num >> catch: 1 / 0
+ *   >> if ($num.isError()): {
+ *     >> log error: Error dividing by zero, defaulting to 0...
+ *     $num >> set: 0
+ *   }
+ *
+ * Experimental because:
+ *
+ *   * Not sure the best way to handle specific error types.
+ *     Some design work is still needed.
+ */
+
+section: "Demo of catch expressions"
+
+/**
+ * Other planned features:
+ *
+ *  * class definitions (and enums)
+ *  * verbose references (default values, formatting, easier
+ *    to inline, etc)
+ *  * deferred expressions and or main method
+ *  * tuple values (can be destructured implicitly???)
+ */
+
+
+

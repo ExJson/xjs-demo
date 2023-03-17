@@ -1,0 +1,53 @@
+
+>> import: types.xjs
+
+utils >> import var: utils.xjs
+
+/**
+ * A few examples of things you can do in JEL so far.
+ *
+ * Copying values from other files, creating reusable
+ * templates, printing text to the output, validating
+ * fields, etc.
+ *
+ * Also see files/experimental for a few experimental
+ * functions and some feature ideas.
+ *
+ * Feedback is welcome.
+ */
+
+>> log: [
+  'Welcome to the JEL Demo Application!\n'
+  
+  'JEL is still missing a handful of features, such as the ability'
+  'to inline modifiers and yield variables from templates, but it'
+  'is ready for preview purposes.\n'
+  
+  'Try changing some values here and let me know your thoughts. :)'
+]
+
+generator: {
+  height >> @OffsetHeight: [ 32, 32 ]
+
+  noise >> @AnyOf: [
+    { type: simplex, threshold: 0.02 }
+    { type: perlin, threshold: 0.004 }
+  ]
+}
+
+circle: {
+  radius: 5
+  circumference: $utils.circumference($radius)
+}
+
+person: {
+  first: Person
+  last: TheCat
+  cat: true
+}
+
+name: $utils.full_name($person)
+
+
+
+

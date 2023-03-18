@@ -60,7 +60,6 @@ public class JelDemo implements ConfigListener, WindowListener {
         if (cfg.isEnableExperimental()) {
             this.ctx.setPrivilege(Privilege.ALL);
         }
-
         this.console = new JTextPane();
         this.consoleTimer = createSysOutTimer(cfg);
         this.input = new JelSyntaxTextArea(this, cfg, true);
@@ -87,10 +86,8 @@ public class JelDemo implements ConfigListener, WindowListener {
 
     @Override
     public void onConfigUpdated(final Config cfg) {
-        if (cfg.isUseDarkTheme()) {
-            this.applyDarkTheme();
-            this.applyLaf();
-        }
+        this.applyTheme();
+        this.applyLaf();
         if (cfg.isEnableExperimental()) {
             this.ctx.setPrivilege(Privilege.ALL);
         }
@@ -135,15 +132,19 @@ public class JelDemo implements ConfigListener, WindowListener {
         if (this.cfg.isUpdated() && this.cfg.isAutoSave()) this.cfg.save();
     }
 
-    private void applyDarkTheme() {
+    private void applyTheme() {
+        final String source =
+            this.cfg.isUseDarkTheme() ? "dark.xml" : "idea.xml";
+        final Theme theme;
         try {
-            Theme theme = Theme.load(getClass().getResourceAsStream(
-                "/org/fife/ui/rsyntaxtextarea/themes/dark.xml"));
-            theme.apply(this.input);
-            theme.apply(this.output);
+            theme = Theme.load(getClass().getResourceAsStream(
+                "/org/fife/ui/rsyntaxtextarea/themes/" + source));
         } catch (IOException unreachable) {
             unreachable.printStackTrace();
+            return;
         }
+        theme.apply(this.input);
+        theme.apply(this.output);
     }
 
     private void applyLaf() {

@@ -93,7 +93,7 @@ public class JelDemo implements ConfigListener, WindowListener {
         }
         this.window.setSize(cfg.getWindowWidth(), cfg.getWindowHeight());
         final String filename = new File(cfg.getActiveFilePath()).getName();
-        this.window.setTitle("JEL Demo Application (" + filename + ")");
+        this.setTitle("JEL Demo Application (" + filename + ")");
         if (this.consoleTimer.isRunning()) {
             this.consoleTimer.stop();
         }
@@ -270,6 +270,10 @@ public class JelDemo implements ConfigListener, WindowListener {
 
     public JFrame getWindow() {
         return this.window;
+    }
+
+    public void setTitle(final String text) {
+        this.window.setTitle(text);
     }
 
     public FindDialog getFindDialog() {

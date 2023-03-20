@@ -2,6 +2,7 @@ package xjs.demo;
 
 import xjs.demo.syntax.JelTokenMaker;
 import xjs.jel.JelContext;
+import xjs.jel.lang.JelObject;
 
 import javax.swing.*;
 import java.io.File;
@@ -10,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public final class AppRunner {
+
+    private static final JelObject APP_OBJECT = new JelObject();
 
     private AppRunner() {}
 
@@ -21,12 +24,15 @@ public final class AppRunner {
         final Config cfg = new Config(new File("config.xjs"));
         final JelDemo app = new JelDemo(dir, ctx, cfg);
 
+        new ExtensionFunctions(app).registerAll(APP_OBJECT);
         SwingUtilities.invokeLater(app::run);
     }
 
     private static JelContext loadContext(final File dir) {
         copyDemoFiles(dir);
-        return new JelContext(dir);
+        final var ctx = new JelContext(dir);
+        ctx.defineGlobal("Demo", APP_OBJECT);
+        return ctx;
     }
 
     private static void copyDemoFiles(final File dir) {

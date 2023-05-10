@@ -25,7 +25,7 @@ configurations {
 
 dependencies {
     bundle group: 'org.exjson', name: 'xjs-core', version: '0.37'
-    bundle group: 'org.exjson', name: 'xjs-jel', version: '0.17.4'
+    bundle group: 'org.exjson', name: 'xjs-jel', version: '0.19'
     bundle group: 'org.exjson', name: 'xjs-compat', version: '0.7'
     bundle group: 'org.jetbrains', name: 'annotations', version: '23.0.0'
     bundle group: 'com.fifesoft', name: 'rstaui', version : '3.2.0'
